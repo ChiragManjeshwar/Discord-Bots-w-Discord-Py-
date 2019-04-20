@@ -12,18 +12,14 @@ prefix = '!'
 async def bot_response( message ):
     await message.add_reaction( '\U0001F440' )
     input_message = message.content[1:].lower()
-                
-    if ( input_message.startswith( 'help' ) ):
-        await bot_command.help( message )
-        return
-        
-    elif ( input_message.startswith( 'say' ) ):
-        await bot_command.say( message )
-        return
 
-    else:
-        await incorrect_call( message.channel )
-        return
+    for i in bot_command.help_info:
+        if ( input_message.startswith( i ) ):
+            function = getattr( bot_command, i )
+            await function( message )
+            return
+    
+    await incorrect_call( message.channel )
 
 @client.event
 async def on_ready():
